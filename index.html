@@ -6,6 +6,10 @@
 <meta name="theme-color" content="#1F4036">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Pizarra">
+<meta name="description" content="Pizarra digital para PDI y paneles interactivos: escribe sobre páginas, PDF e imágenes.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icono-192.png">
 <title>Pizarra Siurot</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231F4036'/%3E%3Cpath d='M14 44c6-14 12-22 16-22s2 12 6 12 6-10 14-16' fill='none' stroke='%23F3F5F1' stroke-width='5' stroke-linecap='round'/%3E%3Crect x='12' y='50' width='40' height='4' rx='2' fill='%23F5B700'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -91,42 +95,46 @@ svg.i{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:2;stroke
 .sw.pal i{background:conic-gradient(#e53935,#fb8c00,#fdd835,#43a047,#1e88e5,#8e24aa,#e53935)}
 .sw.pal b{position:absolute;width:12px;height:12px;border-radius:50%;border:2px solid var(--pz)}
 
-#dock{left:50%;bottom:calc(14px + env(safe-area-inset-bottom));transform:translateX(-50%);max-width:calc(100vw - 20px);overflow-x:auto;scrollbar-width:none}
+#dock{left:50%;bottom:calc(12px + env(safe-area-inset-bottom));transform:translateX(-50%);max-width:calc(100vw - 20px);overflow-x:auto;scrollbar-width:none;transition:opacity .18s}
 #dock::-webkit-scrollbar{display:none}
-body.dock-left #dock,body.dock-right #dock{flex-direction:column;bottom:auto;top:50%;transform:translateY(-50%);max-height:calc(100vh - 20px);overflow-y:auto;overflow-x:hidden}
+body.dock-v #dock{display:grid;grid-auto-flow:column;grid-auto-columns:var(--btn);grid-auto-rows:var(--btn);bottom:auto;top:50%;transform:translateY(-50%);max-width:none;overflow:visible}
 body.dock-left #dock{left:12px}
 body.dock-right #dock{left:auto;right:12px}
-body.dock-left #dock .sep,body.dock-right #dock .sep{width:auto;height:1px;margin:2px 6px}
-body.dock-left #dock .quick,body.dock-right #dock .quick{display:none!important}
-#quickColors{display:contents}
-@media (max-height:920px){body.dock-left,body.dock-right{--btn:48px;--gap:4px}}
-@media (max-height:700px){body.dock-left,body.dock-right{--btn:42px}}
-body.dock-left #topL{left:calc(var(--btn) + 32px)}
-body.dock-right #topR{right:calc(var(--btn) + 32px)}
-body.dock-min #dock>*:not(.keep){display:none}
-
-#topL{left:12px;top:calc(12px + env(safe-area-inset-top));padding-right:14px;max-width:calc(100vw - 380px)}
-#topR{right:12px;top:calc(12px + env(safe-area-inset-top))}
-#docName{min-width:60px;max-width:34vw;font-weight:700;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:8px 6px;border-radius:10px;text-align:left}
-#docName:hover{background:var(--pz-2)}
-#saveState{font-size:13px;opacity:.7;white-space:nowrap;display:flex;align-items:center;gap:6px}
-#saveState i{width:8px;height:8px;border-radius:50%;background:#7bd389;display:block}
-#saveState.dirty i{background:var(--lapiz)}
-#saveState.err i{background:var(--rojo)}
-#zoomPct{min-width:64px;height:calc(var(--btn) - 12px);border-radius:12px;font-weight:700;font-size:15px}
-#zoomPct:hover{background:var(--pz-2)}
-
-#pagenav{right:12px;bottom:calc(14px + env(safe-area-inset-bottom))}
-body.dock-right #pagenav{right:auto;left:12px}
-#pageLbl{min-width:76px;height:calc(var(--btn) - 12px);border-radius:12px;font-weight:700;font-size:17px;white-space:nowrap}
+body.dock-v #dock .sep{display:none}
+#pageLbl{min-width:58px;height:var(--btn);border-radius:14px;font-weight:700;font-size:16px;white-space:nowrap;padding:0 6px;color:var(--tiza);font-variant-numeric:tabular-nums;flex:none}
 #pageLbl:hover{background:var(--pz-2)}
-body.nav-up #pagenav{bottom:calc(var(--btn) + 40px + env(safe-area-inset-bottom))}
-@media (max-width:1150px){#dock .quick{display:none!important}}
-@media (max-width:700px){#topL #saveState{display:none}#docName{max-width:28vw}}
+body.dock-v #pageLbl{min-width:0;width:var(--btn);padding:0;font-size:14px}
+#bMenu .dot{position:absolute;right:10px;top:10px;width:10px;height:10px;border-radius:50%;box-shadow:0 0 0 2px var(--pz);display:none}
+#bMenu.dirty .dot{display:block;background:var(--lapiz)}
+#bMenu.err .dot{display:block;background:var(--rojo)}
+#bColor i{width:32px;height:32px;box-shadow:inset 0 0 0 2px rgba(255,255,255,.4),0 0 0 2px var(--pz-3)}
+#bDockMin .cdot{display:none;position:absolute;right:8px;bottom:8px;width:14px;height:14px;border-radius:50%;box-shadow:0 0 0 2px var(--pz-ink)}
+body.dock-min #dock{display:flex;overflow:visible;flex-direction:row}
+body.dock-min.dock-v #dock{flex-direction:column}
+body.dock-min #dock>*:not(.keep){display:none}
+body.dock-min.multipage #dock>.mini{display:grid}
+body.dock-min #bDockMin{background:var(--lapiz);color:var(--pz-ink)}
+body.dock-min #bDockMin .cdot{display:block}
+body.ghost #dock,body.ghost #selbar,body.ghost #zoomChip{opacity:.08;pointer-events:none}
+#zoomChip{position:absolute;top:calc(12px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:22;display:flex;align-items:center;gap:8px;padding:5px 5px 5px 14px;background:var(--pz);color:var(--tiza);border-radius:14px;box-shadow:var(--shadow);font-weight:700;font-variant-numeric:tabular-nums;transition:opacity .18s}
+#zoomChip button{min-height:40px;padding:0 12px;border-radius:10px;background:var(--pz-2);font-weight:700;font-size:14px}
+#zoomChip button:hover{background:var(--pz-3)}
 
 /* Popovers */
 .pop{position:absolute;z-index:40;background:var(--pz);color:var(--tiza);border-radius:20px;box-shadow:var(--shadow);padding:16px;min-width:260px;max-width:min(440px,calc(100vw - 20px));max-height:calc(100vh - 30px);overflow:auto;animation:popIn .14s ease-out;touch-action:pan-y}
 @keyframes popIn{from{opacity:0;transform:translateY(6px) scale(.98)}to{opacity:1;transform:none}}
+.pop.wide{width:min(520px,calc(100vw - 20px));max-width:none}
+.mhead{display:flex;align-items:stretch;gap:8px;margin-bottom:14px}
+.mname{flex:1;min-width:0;text-align:left;padding:10px 12px;border-radius:14px;background:var(--pz-2)}
+.mname:hover{background:var(--pz-3)}
+.mname b{display:block;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mname small{display:flex;align-items:center;gap:6px;font-size:13px;opacity:.75;margin-top:3px}
+.mname small i{width:8px;height:8px;border-radius:50%;background:#7bd389;flex:none}
+.mname small i.dirty{background:var(--lapiz)}.mname small i.err{background:var(--rojo)}
+.zrow{display:flex;align-items:center;gap:6px;margin-top:12px}
+.zrow output{min-width:64px;text-align:center;font-weight:700;font-variant-numeric:tabular-nums}
+.grid-btns.g5{grid-template-columns:repeat(auto-fill,minmax(88px,1fr))}
+.g5 .gbtn{min-height:74px;font-size:13px;line-height:1.15}
 .pop h3{margin:0 0 10px;font-size:15px;font-weight:700;opacity:.8}
 .pop h3:not(:first-child){margin-top:16px}
 .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
@@ -269,6 +277,7 @@ body.dock-right #pagesPanel{right:auto;left:0}
       <button class="hbtn" id="hImport"><svg class="i" data-i="filePdf"></svg>Abrir PDF o imagen</button>
       <button class="hbtn" id="hOpen"><svg class="i" data-i="file"></svg>Abrir archivo .pizarra</button>
       <button class="hbtn" id="hFolder"><svg class="i" data-i="folder"></svg><span id="hFolderLbl">Elegir carpeta</span></button>
+      <button class="hbtn hidden" id="hInstall"><svg class="i" data-i="install"></svg>Instalar la app</button>
       <button class="hbtn" id="hSettings" aria-label="Ajustes"><svg class="i" data-i="gear"></svg>Ajustes</button>
     </div>
   </header>
@@ -284,50 +293,28 @@ body.dock-right #pagesPanel{right:auto;left:0}
   </div>
   <div id="overlay"></div>
 
-  <div class="pill" id="topL">
-    <button class="tb sm" id="bHome" title="Volver a los rotafolios" aria-label="Volver a los rotafolios"><svg class="i" data-i="grid"></svg></button>
-    <button id="docName" title="Cambiar el nombre"></button>
-    <div id="saveState"><i></i><span>Guardado</span></div>
-  </div>
-  <div class="pill" id="topR">
-    <button class="tb sm" id="bZoomOut" title="Alejar" aria-label="Alejar"><svg class="i" data-i="minus"></svg></button>
-    <button id="zoomPct" title="Ajustar a la pantalla">100%</button>
-    <button class="tb sm" id="bZoomIn" title="Acercar" aria-label="Acercar"><svg class="i" data-i="plus"></svg></button>
-    <div class="sep"></div>
-    <button class="tb sm" id="bBg" title="Fondo de la página" aria-label="Fondo de la página"><svg class="i" data-i="bg"></svg></button>
-    <button class="tb sm" id="bExport" title="Exportar a PDF o imagen" aria-label="Exportar"><svg class="i" data-i="export"></svg></button>
-    <button class="tb sm" id="bSettings" title="Ajustes" aria-label="Ajustes"><svg class="i" data-i="gear"></svg></button>
-    <button class="tb sm" id="bFull" title="Pantalla completa" aria-label="Pantalla completa"><svg class="i" data-i="full"></svg></button>
-  </div>
-
   <nav class="pill" id="dock" aria-label="Herramientas">
-    <button class="tb" data-tool="select" title="Seleccionar y mover (V)"><svg class="i" data-i="select"></svg></button>
-    <button class="tb" data-tool="hand" title="Mover la vista (H)"><svg class="i" data-i="hand"></svg></button>
+    <button class="tb" id="bMenu" title="Menú: rotafolios, páginas, fondo, exportar y ajustes" aria-label="Menú"><svg class="i" data-i="menu"></svg><i class="dot"></i></button>
     <div class="sep"></div>
+    <button class="tb" data-tool="select" title="Seleccionar y mover (V)"><svg class="i" data-i="select"></svg></button>
     <button class="tb" data-tool="pen" title="Bolígrafo (P)"><svg class="i" data-i="pen"></svg></button>
     <button class="tb" data-tool="hl" title="Rotulador fluorescente (F)"><svg class="i" data-i="hl"></svg></button>
     <button class="tb" data-tool="eraser" title="Goma (E)"><svg class="i" data-i="eraser"></svg></button>
     <button class="tb" data-tool="shape" title="Formas (S)"><svg class="i" data-i="shapes"></svg></button>
     <button class="tb" data-tool="text" title="Texto (T)"><svg class="i" data-i="text"></svg></button>
-    <button class="tb" data-tool="laser" title="Puntero láser (L)"><svg class="i" data-i="laser"></svg></button>
-    <div class="sep quick"></div>
-    <div class="quick" id="quickColors"></div>
-    <button class="sw pal" id="bColor" title="Color y grosor" aria-label="Color y grosor"><i></i><b></b></button>
+    <button class="tb" id="bMore" title="Más: láser, insertar, regla, temporizador…" aria-label="Más herramientas"><svg class="i" data-i="moreGrid"></svg></button>
+    <div class="sep"></div>
+    <button class="sw" id="bColor" title="Color y grosor" aria-label="Color y grosor"><i></i></button>
     <div class="sep"></div>
     <button class="tb" id="bUndo" title="Deshacer (Ctrl+Z)" aria-label="Deshacer"><svg class="i" data-i="undo"></svg></button>
-    <button class="tb" id="bRedo" title="Rehacer (Ctrl+Y)" aria-label="Rehacer"><svg class="i" data-i="redo"></svg></button>
+    <button class="tb hidden" id="bRedo" title="Rehacer (Ctrl+Y)" aria-label="Rehacer"><svg class="i" data-i="redo"></svg></button>
     <div class="sep"></div>
-    <button class="tb" id="bInsert" title="Insertar imagen, PDF o foto" aria-label="Insertar"><svg class="i" data-i="image"></svg></button>
-    <button class="tb" id="bAula" title="Herramientas de aula" aria-label="Herramientas de aula"><svg class="i" data-i="aula"></svg></button>
-    <button class="tb keep" id="bDockMin" title="Ocultar la barra" aria-label="Ocultar la barra"><svg class="i" data-i="chevDown"></svg></button>
+    <button class="tb mini" id="bPrev" title="Página anterior" aria-label="Página anterior"><svg class="i" data-i="chevL"></svg></button>
+    <button id="pageLbl" title="Ver todas las páginas" aria-label="Páginas">1/1</button>
+    <button class="tb mini" id="bNext" title="Página siguiente" aria-label="Página siguiente"><svg class="i" data-i="chevR"></svg></button>
+    <button class="tb keep" id="bDockMin" title="Plegar la barra" aria-label="Plegar la barra"><svg class="i" data-i="collapse"></svg><i class="cdot"></i></button>
   </nav>
-
-  <div class="pill" id="pagenav">
-    <button class="tb sm" id="bPrev" title="Página anterior" aria-label="Página anterior"><svg class="i" data-i="chevL"></svg></button>
-    <button id="pageLbl" title="Ver todas las páginas">1 / 1</button>
-    <button class="tb sm" id="bNext" title="Página siguiente" aria-label="Página siguiente"><svg class="i" data-i="chevR"></svg></button>
-    <button class="tb sm" id="bAddPage" title="Página nueva" aria-label="Página nueva"><svg class="i" data-i="pagePlus"></svg></button>
-  </div>
+  <div id="zoomChip" class="hidden"><span>100%</span><button id="bFit">Ajustar</button></div>
 </section>
 
 <div id="modalRoot"></div>
@@ -421,6 +408,10 @@ const ICONS = {
   mirror: 'M12 3v18 M8 7L3 12l5 5z M16 7l5 5-5 5z',
   stack: 'M12 3l9 5-9 5-9-5z M3 13l9 5 9-5',
   page: 'M3 6h18v12H3z',
+  menu: 'M4 6h16 M4 12h16 M4 18h16',
+  moreGrid: 'M4 4h6v6H4z M14 4h6v6h-6z M4 14h6v6H4z M17 14v6 M14 17h6',
+  install: 'M12 3v11 M7.5 9.5L12 14l4.5-4.5 M4 15v4a1 1 0 001 1h14a1 1 0 001-1v-4',
+  collapse: 'M8 8l4 4 4-4 M8 14l4 4 4-4',
 };
 function svgI(name, size) {
   const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -550,13 +541,12 @@ const DB = {
 };
 
 /* ---------- Ajustes ---------- */
-const DEF_SETTINGS = { dock: 'bottom', big: false, multi: false, penOnly: false, palm: true, palmSize: 70, pageKind: '16:9', smooth: 2, autoShapes: false, fingerPan: false };
+const DEF_SETTINGS = { sv: 2, dock: 'auto', big: false, multi: false, penOnly: false, palm: true, palmSize: 70, pageKind: '16:9', smooth: 2, autoShapes: false, fingerPan: false };
 const Settings = Object.assign({}, DEF_SETTINGS, (() => { try { return JSON.parse(localStorage.getItem(APP + '-settings')) || {}; } catch (e) { return {}; } })());
+if (Settings.sv !== 2) { Settings.sv = 2; Settings.dock = 'auto'; }
 function saveSettings() { try { localStorage.setItem(APP + '-settings', JSON.stringify(Settings)); } catch (e) {} applySettings(); }
 function applySettings() {
   document.body.classList.toggle('big', !!Settings.big);
-  document.body.classList.remove('dock-left', 'dock-right');
-  if (Settings.dock !== 'bottom') document.body.classList.add('dock-' + Settings.dock);
   if (typeof layoutChrome === 'function') setTimeout(layoutChrome, 0);
 }
 
@@ -860,13 +850,56 @@ function setupCanvases() {
   R.main = $('#cvMain'); R.live = $('#cvLive');
   R.mctx = R.main.getContext('2d'); R.lctx = R.live.getContext('2d');
   resizeCanvases();
-  new ResizeObserver(() => { layoutChrome(); const keep = S.doc && R.W; const oldW = R.W, oldH = R.H; resizeCanvases(); if (keep && S.view) { S.view.ox += (R.W - oldW) / 2; S.view.oy += (R.H - oldH) / 2; } requestRender(true); }).observe($('#stage'));
+  new ResizeObserver(() => { const keep = S.doc && R.W; const oldW = R.W, oldH = R.H; resizeCanvases(); layoutChrome(); if (keep && S.view) { if (S.view.fit) fitView(); else { S.view.ox += (R.W - oldW) / 2; S.view.oy += (R.H - oldH) / 2; } } requestRender(true); positionSelbar(); }).observe($('#stage'));
+}
+/* Barra única: se coloca abajo o en un lateral, donde menos tape la página */
+S.dockPos = 'bottom';
+function cssNum(name) { return parseFloat(getComputedStyle(document.body).getPropertyValue(name)) || 0; }
+function dockItems() { return [...$('#dock').children].filter(c => !c.classList.contains('sep') && getComputedStyle(c).display !== 'none'); }
+function setDockPos(pos) {
+  const b = document.body, dock = $('#dock');
+  b.classList.remove('dock-left', 'dock-right', 'dock-bottom', 'dock-v');
+  b.classList.add('dock-' + pos); if (pos !== 'bottom') b.classList.add('dock-v');
+  S.dockPos = pos; dock.style.removeProperty('--btn'); dock.style.gridTemplateRows = '';
+  const base = cssNum('--btn'), gap = cssNum('--gap');
+  if (b.classList.contains('dock-min')) return base;
+  if (pos === 'bottom') {
+    const avail = innerWidth - 24, need = dock.scrollWidth;
+    const btn = need > avail ? Math.max(42, Math.floor(base * avail / need)) : base;
+    if (btn !== base) dock.style.setProperty('--btn', btn + 'px');
+    return btn;
+  }
+  const n = dockItems().length, H = innerHeight - 24;
+  let btn = Math.min(base, Math.floor((H - gap * (n + 1)) / n));
+  let rows = n;
+  if (btn < 42) { btn = 42; rows = Math.max(3, Math.floor((H - gap) / (btn + gap))); }
+  dock.style.gridTemplateRows = 'repeat(' + rows + ', var(--btn))';
+  dock.style.setProperty('--btn', btn + 'px');
+  return btn;
 }
 function layoutChrome() {
-  const b = document.body; b.classList.remove('nav-up');
-  if (Settings.dock !== 'bottom' || $('#board').classList.contains('hidden')) return;
-  const d = $('#dock').getBoundingClientRect(), n = $('#pagenav').getBoundingClientRect();
-  if (d.width && d.right > n.left - 8) b.classList.add('nav-up');
+  if ($('#board').classList.contains('hidden')) return;
+  document.body.classList.toggle('multipage', !!S.doc && S.doc.pages.length > 1);
+  let pos = Settings.dock;
+  if (pos === 'auto') {
+    const W = innerWidth, H = innerHeight, p = page() || { w: 16, h: 9 }, gap = cssNum('--gap');
+    const vb = setDockPos('left');
+    const sScaleSide = Math.min((W - vb - gap * 2 - 36) / p.w, (H - 20) / p.h);
+    const hb = setDockPos('bottom');
+    const sScaleBottom = Math.min((W - 20) / p.w, (H - hb - gap * 2 - 30) / p.h);
+    pos = vb >= 46 && sScaleSide >= sScaleBottom * .99 ? 'left' : 'bottom';
+  }
+  setDockPos(pos);
+}
+function chromeInsets() {
+  const ins = { t: 0, r: 0, b: 0, l: 0 };
+  if (document.body.classList.contains('dock-min')) return ins;
+  const d = $('#dock').getBoundingClientRect(), st = $('#stage').getBoundingClientRect();
+  if (!d.width) return ins;
+  if (S.dockPos === 'bottom') ins.b = Math.max(0, st.bottom - d.top + 4);
+  else if (S.dockPos === 'left') ins.l = Math.max(0, d.right - st.left + 4);
+  else ins.r = Math.max(0, st.right - d.left + 4);
+  return ins;
 }
 function resizeCanvases() {
   const st = $('#stage'); R.W = st.clientWidth; R.H = st.clientHeight; R.dpr = DPR();
@@ -966,18 +999,42 @@ function drawLaser(ctx) {
 }
 
 /* --- Vista --- */
-function fitView() {
+function fitTarget() {
+  const p = page(), ins = chromeInsets(), m = 10;
+  const aw = R.W - ins.l - ins.r - m * 2, ah = R.H - ins.t - ins.b - m * 2;
+  const s = Math.max(.05, Math.min(aw / p.w, ah / p.h));
+  return { s, ox: ins.l + m + (aw - p.w * s) / 2, oy: ins.t + m + (ah - p.h * s) / 2, fit: true };
+}
+function fitView(animate) {
   const p = page(); if (!p) return;
-  const m = 14, s = Math.min((R.W - m * 2) / p.w, (R.H - m * 2) / p.h);
-  S.view = { s, ox: (R.W - p.w * s) / 2, oy: (R.H - p.h * s) / 2 };
-  updateZoomLbl(); requestRender(true);
+  const t = fitTarget(); S.fitScale = t.s;
+  if (animate && S.view && S.view.s) animateView(t); else S.view = t;
+  hideZoomChip(); requestRender(true); positionSelbar();
+}
+function animateView(t, ms = 220) {
+  const a = { ...S.view }, t0 = performance.now();
+  const step = now => {
+    const k = Math.min(1, (now - t0) / ms), e = 1 - Math.pow(1 - k, 3);
+    S.view = { s: a.s + (t.s - a.s) * e, ox: a.ox + (t.ox - a.ox) * e, oy: a.oy + (t.oy - a.oy) * e, fit: t.fit };
+    requestRender(true); positionSelbar();
+    if (k < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
 }
 function zoomAt(k, cx = R.W / 2, cy = R.H / 2) {
   const v = S.view, ns = clamp(v.s * k, .1, 8);
-  v.ox = cx - (cx - v.ox) * ns / v.s; v.oy = cy - (cy - v.oy) * ns / v.s; v.s = ns;
+  v.ox = cx - (cx - v.ox) * ns / v.s; v.oy = cy - (cy - v.oy) * ns / v.s; v.s = ns; v.fit = false;
   updateZoomLbl(); requestRender(true); positionSelbar();
 }
-function updateZoomLbl() { const p = page(); if (!p) return; const fit = Math.min((R.W - 28) / p.w, (R.H - 28) / p.h); $('#zoomPct').textContent = Math.round(S.view.s / fit * 100) + '%'; }
+let zoomChipT = 0;
+function zoomPct() { return Math.round(S.view.s / (S.fitScale || S.view.s) * 100); }
+function updateZoomLbl() {
+  const c = $('#zoomChip'); if (!c || !page()) return;
+  c.firstChild.textContent = zoomPct() + '%'; c.classList.remove('hidden');
+  clearTimeout(zoomChipT); zoomChipT = setTimeout(hideZoomChip, 2200);
+  const z = $('#menuZoom'); if (z) z.textContent = zoomPct() + '%';
+}
+function hideZoomChip() { clearTimeout(zoomChipT); const c = $('#zoomChip'); if (c) c.classList.add('hidden'); const z = $('#menuZoom'); if (z && S.view) z.textContent = '100%'; }
 const toPage = (cx, cy) => ({ x: (cx - S.view.ox) / S.view.s, y: (cy - S.view.oy) / S.view.s });
 
 /* --- Render de una página a un lienzo aparte (miniaturas y exportación) --- */
@@ -1005,7 +1062,11 @@ async function pageThumb(p, width = 220) {
 function pushHist(e) { S.hist.undo.push(e); if (S.hist.undo.length > 300) S.hist.undo.shift(); S.hist.redo.length = 0; updateUndo(); }
 function setObjects(arr, p = page()) { const before = p.objects; p.objects = arr; pushHist({ k: 'obj', pid: p.id, before, after: arr }); changed(); }
 function changed(main = true) { markDirty(); requestRender(main); }
-function updateUndo() { $('#bUndo').disabled = !S.hist.undo.length; $('#bRedo').disabled = !S.hist.redo.length; }
+function updateUndo() {
+  $('#bUndo').disabled = !S.hist.undo.length;
+  const r = $('#bRedo'), hid = !S.hist.redo.length;
+  if (r.classList.contains('hidden') !== hid) { r.classList.toggle('hidden', hid); if (S.dockPos !== 'bottom') layoutChrome(); }
+}
 function applyHist(e, which) {
   if (e.k === 'obj') {
     const i = S.doc.pages.findIndex(p => p.id === e.pid); if (i < 0) return;
@@ -1061,6 +1122,12 @@ function onDown(e) {
   P.role = 'tool'; P.tool = S.tool;
   Tools[S.tool].down(P);
 }
+let ghostRect = null, ghostT = 0;
+function ghostCheck(P) {
+  if (!ghostRect) { const r = $('#dock').getBoundingClientRect(), s = stageEl().getBoundingClientRect(); ghostRect = { l: r.left - s.left - 56, t: r.top - s.top - 56, r: r.right - s.left + 56, b: r.bottom - s.top + 56 }; }
+  if (P.sx > ghostRect.l && P.sx < ghostRect.r && P.sy > ghostRect.t && P.sy < ghostRect.b) { clearTimeout(ghostT); document.body.classList.add('ghost'); }
+}
+function ghostEnd() { if (ptrs.size) return; ghostRect = null; clearTimeout(ghostT); ghostT = setTimeout(() => document.body.classList.remove('ghost'), 350); }
 function onMove(e) {
   const P = ptrs.get(e.pointerId);
   if (!P) { // ratón sin pulsar: cursor de la goma
@@ -1071,10 +1138,10 @@ function onMove(e) {
   for (const ev of (evs.length ? evs : [e])) {
     const pt = evPos(ev); Object.assign(P, { sx: pt.sx, sy: pt.sy, x: pt.x, y: pt.y, p: pt.p });
     if (P.role === 'pinch') { doPinch(); break; }
-    else if (P.role === 'pan') { S.view.ox = P.v0.ox + (P.sx - P.sx0); S.view.oy = P.v0.oy + (P.sy - P.sy0); requestRender(true); positionSelbar(); }
-    else if (P.role === 'inst') P.inst.move(P);
-    else if (P.role === 'palm') Eraser.move(P);
-    else if (P.role === 'tool') Tools[P.tool].move(P);
+    else if (P.role === 'pan') { S.view.ox = P.v0.ox + (P.sx - P.sx0); S.view.oy = P.v0.oy + (P.sy - P.sy0); S.view.fit = false; requestRender(true); positionSelbar(); }
+    else if (P.role === 'inst') { P.inst.move(P); ghostCheck(P); }
+    else if (P.role === 'palm') { Eraser.move(P); ghostCheck(P); }
+    else if (P.role === 'tool') { Tools[P.tool].move(P); ghostCheck(P); }
   }
 }
 function onUp(e) {
@@ -1086,6 +1153,7 @@ function onUp(e) {
   else if (P.role === 'palm') Eraser.up(P);
   else if (P.role === 'tool') { if (e.type === 'pointercancel' && Tools[P.tool].cancel) Tools[P.tool].cancel(P); else Tools[P.tool].up(P); }
   if (S.tool !== 'eraser' || e.pointerType !== 'mouse') { live.cursor = null; requestRender(); }
+  ghostEnd();
 }
 function abortRole(P) {
   if (P.role === 'tool' && Tools[P.tool].cancel) Tools[P.tool].cancel(P);
@@ -1097,7 +1165,7 @@ function doPinch() {
   const d = Math.hypot(a.sx - b.sx, a.sy - b.sy), c = { x: (a.sx + b.sx) / 2, y: (a.sy + b.sy) / 2 };
   const v0 = pinch.v0, ns = clamp(v0.s * d / pinch.d0, .1, 8);
   const px = (pinch.c0.x - v0.ox) / v0.s, py = (pinch.c0.y - v0.oy) / v0.s;
-  S.view = { s: ns, ox: c.x - px * ns, oy: c.y - py * ns };
+  S.view = { s: ns, ox: c.x - px * ns, oy: c.y - py * ns, fit: false };
   updateZoomLbl(); requestRender(true); positionSelbar();
 }
 function setupInput() {
@@ -1111,7 +1179,7 @@ function setupInput() {
   st.addEventListener('wheel', e => {
     e.preventDefault(); const r = st.getBoundingClientRect();
     if (e.ctrlKey || e.metaKey) zoomAt(Math.exp(-e.deltaY * .0025), e.clientX - r.left, e.clientY - r.top);
-    else { S.view.ox -= e.deltaX; S.view.oy -= e.deltaY; requestRender(true); positionSelbar(); }
+    else { S.view.ox -= e.deltaX; S.view.oy -= e.deltaY; S.view.fit = false; requestRender(true); positionSelbar(); }
   }, { passive: false });
   document.addEventListener('gesturestart', e => e.preventDefault());
 }
@@ -1519,20 +1587,35 @@ function setTool(t) {
   commitText();
   S.tool = t; if (COLOR_TOOLS.includes(t)) lastColorTool = t;
   $$('#dock [data-tool]').forEach(b => b.classList.toggle('on', b.dataset.tool === t));
+  const more = $('#bMore'), extra = t === 'laser' || t === 'hand';
+  more.classList.toggle('on', extra); more.firstChild.firstChild.setAttribute('d', ICONS[extra ? t : 'moreGrid']);
+  $('#bDockMin').title = document.body.classList.contains('dock-min') ? 'Mostrar las herramientas' : 'Plegar la barra';
+  updateDockMinIcon();
   stageEl().className = 't-' + t;
   if (t !== 'select') clearSel();
   live.cursor = null; requestRender();
   updateColorUI();
 }
+const TOOL_ICON = { select: 'select', pen: 'pen', hl: 'hl', eraser: 'eraser', shape: 'shapes', text: 'text', laser: 'laser', hand: 'hand' };
+function updateDockMinIcon() {
+  const min = document.body.classList.contains('dock-min'), b = $('#bDockMin');
+  b.firstChild.firstChild.setAttribute('d', ICONS[min ? TOOL_ICON[S.tool] : 'collapse']);
+  b.lastChild.style.background = COLOR_TOOLS.includes(S.tool) ? S.tools[S.tool].color : 'transparent';
+}
 function updateColorUI() {
   const ct = colorTool(), cfg = S.tools[ct];
-  const quick = ct === 'hl' ? FLUOR.slice(0, 4) : [inkDefault(), '#1E63D6', '#D7372F', '#2E8B3E'];
-  const box = $('#quickColors'); box.innerHTML = '';
-  quick.forEach(c => {
-    const b = el('button', { class: 'sw' + (cfg.color.toLowerCase() === c.toLowerCase() && COLOR_TOOLS.includes(S.tool) ? ' on' : ''), title: 'Color', 'aria-label': 'Color ' + c, onclick: () => pickColor(c) }, el('i', { style: { background: c } }));
-    box.append(b);
-  });
-  $('#bColor b').style.background = cfg.color;
+  $('#bColor i').style.background = cfg.color;
+  $('#bColor').title = 'Color y grosor (' + ({ pen: 'bolígrafo', hl: 'fluorescente', shape: 'formas', text: 'texto' })[ct] + ')';
+  updateDockMinIcon();
+}
+function toggleDock(force) {
+  const b = document.body, min = force != null ? force : !b.classList.contains('dock-min');
+  closePopover();
+  b.classList.toggle('dock-min', min);
+  $('#bDockMin').title = min ? 'Mostrar las herramientas' : 'Plegar la barra';
+  updateDockMinIcon(); layoutChrome();
+  try { localStorage.setItem(APP + '-dockmin', min ? '1' : ''); } catch (e) {}
+  if (S.view && S.view.fit) fitView(true);
 }
 function pickColor(c, target) {
   if (S.tool === 'select' && S.sel.size && !target) { recolorSel(c); return; }
@@ -1566,16 +1649,18 @@ function openPopover(anchor, build) {
   placePopover(pop, anchor);
 }
 function placePopover(pop, anchor) {
-  const a = anchor.getBoundingClientRect(), W = innerWidth, H = innerHeight;
-  const inDock = anchor.closest('#dock'), inPage = anchor.closest('#pagenav');
-  const above = (inDock && Settings.dock === 'bottom') || inPage;
+  const inDock = anchor.closest('#dock'), W = innerWidth, H = innerHeight;
+  const ar = anchor.getBoundingClientRect(), dr = inDock ? inDock.getBoundingClientRect() : ar;
+  const a = { left: ar.left, width: ar.width, top: inDock && S.dockPos === 'bottom' ? dr.top : ar.top, height: ar.height, right: dr.right, bottom: ar.bottom };
+  if (inDock && S.dockPos === 'left') a.right = dr.right; if (inDock && S.dockPos === 'right') a.left = dr.left;
+  const above = inDock && S.dockPos === 'bottom';
   if (above) pop.style.maxHeight = Math.max(200, a.top - 22) + 'px';
   else if (!inDock) pop.style.maxHeight = Math.max(200, H - a.bottom - 22) + 'px';
   const pw = pop.offsetWidth, ph = pop.offsetHeight;
   let x, y;
   if (above) { x = a.left + a.width / 2 - pw / 2; y = a.top - ph - 12; }
-  else if (inDock && Settings.dock === 'left') { x = a.right + 14; y = a.top + a.height / 2 - ph / 2; }
-  else if (inDock && Settings.dock === 'right') { x = a.left - pw - 14; y = a.top + a.height / 2 - ph / 2; }
+  else if (inDock && S.dockPos === 'left') { x = a.right + 14; y = a.top + a.height / 2 - ph / 2; }
+  else if (inDock && S.dockPos === 'right') { x = a.left - pw - 14; y = a.top + a.height / 2 - ph / 2; }
   else { x = a.left + a.width / 2 - pw / 2; y = a.bottom + 12; }
   pop.style.left = clamp(x, 10, W - pw - 10) + 'px'; pop.style.top = clamp(y, 10, H - ph - 10) + 'px';
 }
@@ -1663,7 +1748,7 @@ function openToolPop(t, anchor) {
       pop.append(h3('Puntero láser'), el('p', { class: 'hint', style: { marginTop: 0 } }, 'Señala sobre la pizarra. El rastro desaparece solo y no se guarda.'));
     } else if (t === 'hand') {
       pop.append(h3('Mover la vista'), el('p', { class: 'hint', style: { marginTop: 0 } }, 'Arrastra para mover la página. Con dos dedos también puedes acercar y alejar.'),
-        el('div', { class: 'row', style: { marginTop: '12px' } }, chip('Ajustar a la pantalla', false, () => { closePopover(); fitView(); }, 'fit')));
+        el('div', { class: 'row', style: { marginTop: '12px' } }, chip('Ajustar a la pantalla', false, () => { closePopover(); fitView(true); }, 'fit')));
     }
   });
 }
@@ -1678,10 +1763,13 @@ async function clearPage() {
 function updatePageUI() {
   if (!S.doc) return;
   const n = S.doc.pages.length;
-  $('#pageLbl').textContent = (S.pi + 1) + ' / ' + n;
-  $('#bPrev').disabled = S.pi === 0; $('#bNext').disabled = false;
-  $('#bNext').title = S.pi === n - 1 ? 'Página nueva' : 'Página siguiente';
-  $('#docName').textContent = S.doc.name;
+  $('#pageLbl').textContent = (S.pi + 1) + '/' + n;
+  $('#pageLbl').title = 'Página ' + (S.pi + 1) + ' de ' + n + ': ver todas';
+  $('#bPrev').disabled = S.pi === 0;
+  const last = S.pi === n - 1, nx = $('#bNext');
+  nx.title = last ? 'Añadir una página' : 'Página siguiente'; nx.setAttribute('aria-label', nx.title);
+  nx.firstChild.firstChild.setAttribute('d', ICONS[last ? 'plus' : 'chevR']);
+  const multi = n > 1; if (document.body.classList.contains('multipage') !== multi) layoutChrome();
   adaptInk();
 }
 function goPage(i) {
@@ -1805,6 +1893,7 @@ async function openBoard(doc) {
   S.doc = doc; S.pi = 0; S.hist = { undo: [], redo: [] }; S.sel = new Set(); S.preview = null; S.hideIds = null;
   thumbCache.clear();
   $('#home').classList.add('hidden'); $('#board').classList.remove('hidden');
+  try { document.body.classList.toggle('dock-min', localStorage.getItem(APP + '-dockmin') === '1'); } catch (e) {}
   resizeCanvases(); layoutChrome(); fitView(); updatePageUI(); updateUndo(); setTool(S.tool === 'laser' ? 'pen' : S.tool);
   setSaveState(doc.link && S.folderOK ? 'folder' : 'saved');
   Nav.push('board', closeBoard);
@@ -1821,9 +1910,12 @@ function goHome() { if (Nav.has('board')) Nav.closeFrom('board'); }
 
 /* --- Guardado automático --- */
 function setSaveState(st, msg) {
-  const b = $('#saveState'); if (!b) return;
-  b.className = st === 'dirty' ? 'dirty' : st === 'err' ? 'err' : '';
-  b.lastChild.textContent = msg || ({ dirty: 'Guardando…', saved: 'Guardado en este equipo', folder: 'Guardado en la carpeta', err: 'Sin guardar en la carpeta' })[st];
+  const b = $('#bMenu'); if (!b) return;
+  const wasErr = S.saveSt === 'err';
+  S.saveSt = st; S.saveMsg = msg || ({ dirty: 'Guardando…', saved: 'Guardado en este equipo', folder: 'Guardado en la carpeta', err: 'Sin guardar en la carpeta' })[st];
+  b.classList.toggle('dirty', st === 'dirty'); b.classList.toggle('err', st === 'err');
+  const m = $('#menuSave'); if (m) { m.firstChild.className = st === 'dirty' ? 'dirty' : st === 'err' ? 'err' : ''; m.lastChild.textContent = S.saveMsg; }
+  if (st === 'err' && !wasErr) toast(S.saveMsg, { err: true, action: S.folder && !S.folderOK ? { label: 'Dar permiso', fn: reconnectFolder } : null });
 }
 function markDirty() { if (!S.doc) return; S.doc.modified = Date.now(); setSaveState('dirty'); saveSoon(); }
 const saveSoon = debounce(() => saveNow(), 1200);
@@ -2639,24 +2731,97 @@ function openSpot() {
   Nav.push('spot', () => { s.remove(); bar.remove(); });
   toast('Arrastra el borde del foco para moverlo y el punto amarillo para cambiar el tamaño');
 }
-function openAulaPop(anchor) {
+/* --- Botón «Más»: señalar, insertar, medir y utilidades de clase --- */
+function openMorePop(anchor) {
   openPopover(anchor, pop => {
-    const g1 = el('div', { class: 'grid-btns' }), g2 = el('div', { class: 'grid-btns' });
-    const add = (g, ic, l, fn) => g.append(el('button', { class: 'gbtn', onclick: () => { closePopover(); fn(); } }, svgI(ic), l));
-    add(g1, 'ruler', 'Regla', () => addInstrument('ruler'));
-    add(g1, 'setsq', 'Escuadra', () => addInstrument('setsq'));
-    add(g1, 'cartabon', 'Cartabón', () => addInstrument('cartabon'));
-    add(g1, 'protractor', 'Transportador', () => addInstrument('protractor'));
-    add(g1, 'compass', 'Compás', () => addInstrument('compass'));
-    if (S.instruments.length) add(g1, 'x', 'Quitar todos', () => { S.instruments = []; requestRender(); });
-    add(g2, 'curtain', 'Cortina', openCurtain);
-    add(g2, 'spot', 'Foco', openSpot);
-    add(g2, 'timer', 'Temporizador', openTimer);
-    add(g2, 'dice', 'Dados', openDice);
-    add(g2, 'users', 'Elegir al azar', openPicker);
-    add(g2, 'camera', 'Cámara', openCamera);
-    pop.append(h3('Medir y dibujar'), g1, h3('Para la clase'), g2);
+    pop.classList.add('wide');
+    const sec = (title, items) => {
+      const g = el('div', { class: 'grid-btns g5' });
+      items.forEach(([ic, l, fn, on]) => g.append(el('button', { class: 'gbtn' + (on ? ' on' : ''), onclick: () => { closePopover(); fn(); } }, svgI(ic), l)));
+      pop.append(h3(title), g);
+    };
+    sec('Señalar y mover', [
+      ['laser', 'Láser', () => setTool('laser'), S.tool === 'laser'],
+      ['hand', 'Mover la vista', () => setTool('hand'), S.tool === 'hand'],
+      ['pagePlus', 'Página nueva', addPage],
+    ]);
+    const ins = [['image', 'Imagen', () => pickFiles('image/*')], ['filePdf', 'PDF', () => pickFiles('application/pdf,.pdf')], ['camera', 'Cámara', openCamera], ['bg', 'Imagen de fondo', () => pickFiles('image/*', 'bg')]];
+    if (page().bgImage) ins.push(['trash', 'Quitar fondo', () => setBgImage(null)]);
+    sec('Insertar', ins);
+    const med = [['ruler', 'Regla', () => addInstrument('ruler')], ['setsq', 'Escuadra', () => addInstrument('setsq')], ['cartabon', 'Cartabón', () => addInstrument('cartabon')], ['protractor', 'Transportador', () => addInstrument('protractor')], ['compass', 'Compás', () => addInstrument('compass')]];
+    if (S.instruments.length) med.push(['x', 'Quitar todos', () => { S.instruments = []; requestRender(); }]);
+    sec('Medir y dibujar', med);
+    sec('Para la clase', [['curtain', 'Cortina', openCurtain], ['spot', 'Foco', openSpot], ['timer', 'Temporizador', openTimer], ['dice', 'Dados', openDice], ['users', 'Elegir al azar', openPicker]]);
   });
+}
+/* --- Menú ☰: el rotafolio, la vista y la aplicación --- */
+function openMenuPop(anchor) {
+  openPopover(anchor, pop => {
+    pop.classList.add('wide');
+    const name = el('button', { class: 'mname', title: 'Cambiar el nombre', onclick: () => { closePopover(); renameCurrent(); } },
+      el('b', {}, S.doc.name), el('small', { id: 'menuSave' }, el('i', { class: S.saveSt === 'dirty' ? 'dirty' : S.saveSt === 'err' ? 'err' : '' }), el('span', {}, S.saveMsg || 'Guardado')));
+    pop.append(el('div', { class: 'mhead' }, name));
+    if (S.saveSt === 'err' && S.folder && !S.folderOK) pop.append(el('div', { class: 'row', style: { marginBottom: '12px' } }, chip('Dar permiso a la carpeta', true, () => { closePopover(); reconnectFolder(); }, 'folder')));
+    const g = el('div', { class: 'grid-btns g5' });
+    const add = (ic, l, fn) => g.append(el('button', { class: 'gbtn', onclick: e => fn(e) }, svgI(ic), l));
+    add('grid', 'Mis rotafolios', () => { closePopover(); goHome(); });
+    add('pages', 'Páginas', () => { closePopover(); togglePagesPanel(); });
+    add('bg', 'Fondo', () => { closePopover(); openBgPop($('#bMenu')); });
+    add('export', 'Exportar', () => { closePopover(); exportFlow(); });
+    add(document.fullscreenElement ? 'fullExit' : 'full', document.fullscreenElement ? 'Salir de pantalla completa' : 'Pantalla completa', () => { closePopover(); toggleFull(); });
+    add('gear', 'Ajustes', () => { closePopover(); openSettings(); });
+    if (Install.can()) add('install', 'Instalar la app', () => { closePopover(); Install.run(); });
+    pop.append(g);
+    pop.append(h3('Vista'), el('div', { class: 'zrow' },
+      chip('', false, () => zoomAt(.8), 'minus'), el('output', { id: 'menuZoom' }, zoomPct() + '%'), chip('', false, () => zoomAt(1.25), 'plus'),
+      chip('Ajustar a la pantalla', false, () => { closePopover(); fitView(true); }, 'fit')));
+  });
+}
+
+/* =========================================================
+   PWA: instalar, trabajar sin conexión y abrir archivos
+   ========================================================= */
+const Install = {
+  ev: null,
+  standalone: () => matchMedia('(display-mode: standalone)').matches || matchMedia('(display-mode: fullscreen)').matches || navigator.standalone === true,
+  can() { return !!this.ev && !this.standalone(); },
+  async run() {
+    if (!this.ev) return;
+    this.ev.prompt();
+    const r = await this.ev.userChoice.catch(() => null);
+    if (r && r.outcome === 'accepted') { this.ev = null; $('#hInstall').classList.add('hidden'); }
+  },
+  init() {
+    window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); this.ev = e; if (!this.standalone()) $('#hInstall').classList.remove('hidden'); });
+    window.addEventListener('appinstalled', () => { this.ev = null; $('#hInstall').classList.add('hidden'); toast('Pizarra instalada. Ya puedes abrirla desde el escritorio o el menú de aplicaciones.'); });
+  }
+};
+function setupPWA() {
+  Install.init();
+  if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+    navigator.serviceWorker.register('sw.js').then(reg => {
+      const offer = w => {
+        if (!w || !navigator.serviceWorker.controller) return;
+        toast('Hay una versión nueva de la Pizarra', { ms: 15000, action: { label: 'Actualizar', fn: async () => { if (S.doc) { saveSoon.flush(); await saving; } w.postMessage('skipWaiting'); } } });
+      };
+      if (reg.waiting) offer(reg.waiting);
+      reg.addEventListener('updatefound', () => { const w = reg.installing; w && w.addEventListener('statechange', () => { if (w.state === 'installed') offer(w); }); });
+      setInterval(() => reg.update().catch(() => {}), 60 * 60e3);
+    }).catch(e => console.warn('Service worker', e));
+    let reloading = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => { if (reloading) return; reloading = true; location.reload(); });
+  }
+  // Abrir .pizarra o PDF desde el gestor de archivos («Abrir con Pizarra»)
+  if ('launchQueue' in window) {
+    window.launchQueue.setConsumer(async params => {
+      if (!params.files || !params.files.length) return;
+      const files = await Promise.all(params.files.map(h => h.getFile()));
+      if (S.doc) { goHome(); await sleep(120); }
+      handleFiles(files);
+    });
+  }
+  const q = new URLSearchParams(location.search);
+  if (q.has('nuevo')) { history.replaceState(null, '', location.pathname); setTimeout(newDocFlow, 200); }
 }
 
 /* =========================================================
@@ -2669,10 +2834,11 @@ function segRow(opts, cur, fn) {
 }
 function openSettings() {
   closePopover();
-  const set = (k, v) => { Settings[k] = v; saveSettings(); if (S.doc) { requestRender(true); positionSelbar(); } };
+  const set = (k, v) => { Settings[k] = v; saveSettings(); if (S.doc) { layoutChrome(); if (S.view.fit) fitView(true); requestRender(true); positionSelbar(); } };
   const box = el('div', { class: 'set' });
   box.append(
-    el('h4', {}, 'Barra de herramientas'), segRow([['bottom', 'Abajo'], ['left', 'Izquierda'], ['right', 'Derecha']], Settings.dock, v => set('dock', v)),
+    el('h4', {}, 'Barra de herramientas'), segRow([['auto', 'Automática'], ['bottom', 'Abajo'], ['left', 'Izquierda'], ['right', 'Derecha']], Settings.dock, v => set('dock', v)),
+    el('p', { style: { margin: '8px 0 0', fontSize: '14px' } }, 'Automática la pone donde menos tapa la página. Con el botón de las flechas se pliega en un solo botón.'),
     el('h4', {}, 'Tamaño de los botones'), segRow([[false, 'Normal'], [true, 'Grande (paneles grandes)']], !!Settings.big, v => set('big', v)),
     el('h4', {}, 'Pantalla táctil y lápiz'),
     toggleRow('Varias personas escriben a la vez', 'Cada dedo dibuja por separado. Desactiva el zoom con dos dedos.', Settings.multi, v => set('multi', v)),
@@ -2751,27 +2917,26 @@ async function init() {
   setupCanvases(); setupInput(); setupKeys();
   const on = (id, fn) => $(id).addEventListener('click', fn);
   $$('#dock [data-tool]').forEach(b => b.addEventListener('click', () => { const t = b.dataset.tool; if (S.tool === t) openToolPop(t, b); else { closePopover(); setTool(t); } }));
+  on('#bMenu', e => openMenuPop(e.currentTarget));
+  on('#bMore', e => { const b = e.currentTarget; if ((S.tool === 'laser' || S.tool === 'hand') && !popEl) openToolPop(S.tool, b); else openMorePop(b); });
   on('#bColor', e => openColorPop(e.currentTarget));
   on('#bUndo', undo); on('#bRedo', redo);
-  on('#bInsert', e => openInsertPop(e.currentTarget)); on('#bAula', e => openAulaPop(e.currentTarget));
-  on('#bDockMin', () => { const m = document.body.classList.toggle('dock-min'); $('#bDockMin svg').firstChild.setAttribute('d', ICONS[m ? 'chevUp' : 'chevDown']); $('#bDockMin').title = m ? 'Mostrar la barra' : 'Ocultar la barra'; layoutChrome(); });
-  on('#bHome', goHome); on('#docName', renameCurrent);
-  on('#saveState', () => { if ($('#saveState').classList.contains('err') && S.folder) reconnectFolder(); });
-  on('#bZoomIn', () => zoomAt(1.25)); on('#bZoomOut', () => zoomAt(.8)); on('#zoomPct', fitView);
-  on('#bBg', e => openBgPop(e.currentTarget)); on('#bExport', exportFlow); on('#bSettings', openSettings); on('#bFull', toggleFull);
+  on('#bDockMin', () => toggleDock());
+  on('#bFit', () => fitView(true));
   on('#bPrev', () => S.pi > 0 && goPage(S.pi - 1));
   on('#bNext', () => S.pi < S.doc.pages.length - 1 ? goPage(S.pi + 1) : addPage());
-  on('#bAddPage', addPage); on('#pageLbl', togglePagesPanel);
+  on('#pageLbl', togglePagesPanel);
+  on('#hInstall', () => Install.run());
   on('#hNew', newDocFlow); on('#hImport', () => pickFiles('application/pdf,.pdf,image/*'));
   on('#hOpen', () => pickFiles('.pizarra,application/json'));
   on('#hFolder', () => { if (S.folder && !S.folderOK) reconnectFolder(); else if (S.folder) openSettings(); else chooseFolder(); });
   on('#hSettings', openSettings);
-  document.addEventListener('fullscreenchange', () => $('#bFull svg').firstChild.setAttribute('d', ICONS[document.fullscreenElement ? 'fullExit' : 'full']));
   const flush = () => { saveToolPrefs(); if (S.doc) saveSoon.flush(); };
   window.addEventListener('pagehide', flush);
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') flush(); });
   if (document.fonts) { document.fonts.ready.then(() => { cache = new WeakMap(); thumbCache.clear(); requestRender(true); }); document.fonts.addEventListener && document.fonts.addEventListener('loadingdone', () => { cache = new WeakMap(); requestRender(true); }); }
   if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
+  setupPWA();
   await restoreFolder();
   renderLibrary();
 }
